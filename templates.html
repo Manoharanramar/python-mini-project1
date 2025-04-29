@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>🎬 Snake Order Booking</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <h1>🎟️ Snake Order Booking</h1>
+  <p>Click to book seats</p>
+
+  <div class="theater">
+    {% for row in range(rows) %}
+      {% set seats = range(cols) %}
+      {% if row % 2 == 1 %}
+        {% set seats = seats|reverse %}
+      {% endif %}
+      {% for col in seats %}
+        {% set seat_id = 'R{}-C{}'.format(row+1, col+1) %}
+        <div class="seat {% if seat_id in booked %}booked{% endif %}" 
+             data-seat="{{ seat_id }}">
+          {{ seat_id }}
+        </div>
+      {% endfor %}
+    {% endfor %}
+  </div>
+
+  <script>
+    document.querySelectorAll('.seat').forEach(seat => {
+      seat.addEventListener('click', () => {
+        if (seat.classList.contains('booked')) return;
+        const seatId = seat.dataset.seat;
+        fetch('/book', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ seat: seatId })
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.status === 'success') {
+            seat.classList.add('booked');
+            alert(`Seat ${seatId} booked!`);
+          } else {
+            alert(data.reason);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>

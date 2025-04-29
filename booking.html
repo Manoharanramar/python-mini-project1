@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Your Ticket</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-image: url('https://asset.gecdesigns.com/img/background-templates/gradient-triangle-abstract-background-template-10032405-1710079376651-cover.webp');
+      color: #fff;
+      padding: 2em;
+    }
+    nav {
+      text-align: center;
+      margin-bottom: 2em;
+    }
+    nav a {
+      color: #e50914;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 0.5em 1em;
+      background-color: #000000;
+      border-radius: 5px;
+    }
+    .container {
+      max-width: 600px;
+      margin: auto;
+      background-image: url('https://media.istockphoto.com/id/1406703019/photo/tasty-salted-popcorn-on-black-dark-stone-table-background-top-view-flat-lay-with-copy-space.jpg?s=612x612&w=0&k=20&c=dlbnrVOskAIZ4Hj2bWW1qET1XgQe9AASPgXYaHOw6Fs=');
+      padding: 2em;
+      border-radius: 10px;
+    }
+    label {
+      display: block;
+      margin-top: 1em;
+    }
+    input, select {
+      width: 100%;
+      padding: 0.5em;
+      margin-top: 0.5em;
+      border-radius: 5px;
+      border: none;
+    }
+    button {
+      margin-top: 1.5em;
+      padding: 1em;
+      background-color: #e50914;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      width: 100%;
+    }
+    #qr-code-container {
+      margin-top: 2em;
+      text-align: center;
+    }
+    #qr-code-img {
+      max-width: 200px;
+      height: auto;
+      margin-top: 1em;
+    }
+  </style>
+  <!-- QR Code library -->
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.4.4/build/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- 🏠 Home navigation at the top -->
+  <nav>
+    <a href="index.html">← Back to Home</a>
+  </nav>
+
+  <div class="container">
+    <h2>Book Tickets for <span id="movie-title">Loading...</span></h2>
+    <form onsubmit="handleBooking(event)">
+      <label for="name">Your Name</label>
+      <input type="text" id="name" required />
+
+      <label for="date">Choose Date</label>
+      <input type="date" id="date" required />
+
+      <label for="time">Choose Time</label>
+      <select id="time" required>
+        <option>10:00 AM</option>
+        <option>1:00 PM</option>
+        <option>4:00 PM</option>
+        <option>7:00 PM</option>
+        <option>10:00 PM</option>
+      </select>
+
+      <label for="seats">Number of Seats</label>
+      <input type="number" id="seats" min="1" max="10" required />
+
+      <button type="submit">Confirm Booking</button>
+    </form>
+  </div>
+
+  <script>
+    // Get movie name and theater from URL (when loading this page)
+    const params = new URLSearchParams(window.location.search);
+    const movie = params.get("movie");
+    document.getElementById("movie-title").textContent = movie || "your selected movie";
+
+    function handleBooking(event) {
+      event.preventDefault();
+
+      const name = document.getElementById('name').value;
+      const date = document.getElementById('date').value;
+      const time = document.getElementById('time').value;
+      const seats = document.getElementById('seats').value;
+
+      // Save booking details temporarily
+      sessionStorage.setItem('userName', name);
+      sessionStorage.setItem('date', date);
+      sessionStorage.setItem('time', time);
+      sessionStorage.setItem('seats', seats);
+
+      const bookingDetails = `Booking: ${movie}, ${date}, ${time}, ${seats} Seats`;
+
+      // Generate QR code (optional)
+      QRCode.toDataURL(bookingDetails, function (error, url) {
+        if (error) {
+          console.error(error);
+        } else {
+          alert(`Booking successful!\n${seats} tickets for ${movie} on ${date} at ${time}`);
+
+          // Redirect to select theater
+          window.location.href = `theater-selection.html?movie=${encodeURIComponent(movie)}`;
+        }
+      });
+    }
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,111 @@
+<?php
+session_start();
+include("connect.php");
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Sign In</title>
+  <style>
+    body {
+      background: url('https://png.pngtree.com/thumb_back/fh260/background/20210519/pngtree-flat-commercial-movie-background-image_716633.jpg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .login-box {
+      background-color: rgba(0, 0, 0, 0.85);
+      padding: 2em;
+      border-radius: 8px;
+      width: 300px;
+      text-align: center;
+    }
+
+    input {
+      width: 90%;
+      padding: 0.8em;
+      margin: 0.5em 0;
+      border: none;
+      border-radius: 4px;
+    }
+
+    button {
+      background-color: #e50914;
+      color: white;
+      padding: 0.8em;
+      width: 100%;
+      border: none;
+      border-radius: 4px;
+      margin-top: 1em;
+      cursor: pointer;
+    }
+
+    a {
+      color: #ddd;
+      display: block;
+      margin-top: 1em;
+      text-decoration: none;
+    }
+
+    #forgot-password {
+      display: none;
+      color: #ff6961;
+      margin-top: 1em;
+    }
+
+    #message {
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <div class="login-box">
+    <h2>Login</h2>
+    <form id="loginForm">
+      <input type="email" id="login-email" placeholder="Email" required><br>
+      <input type="password" id="login-password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+    <p id="message"></p>
+    <a href="#" id="forgot-password">Forgot Password?</a>
+    <a href="signu.html">Don't have an account? Sign Up</a>
+  </div>
+
+  <script>
+    document.getElementById('loginForm').addEventListener('submit', function(event) {
+      event.preventDefault(); // prevent form submission
+      
+      const email = document.getElementById("login-email").value;
+      const password = document.getElementById("login-password").value;
+      const msg = document.getElementById("message");
+      const forgot = document.getElementById("forgot-password");
+
+      const storedEmail = localStorage.getItem("userEmail");
+      const storedPassword = localStorage.getItem("userPassword");
+
+      if (email === storedEmail && password === storedPassword) {
+        msg.textContent = "✅ Login successful!";
+        msg.style.color = "lightgreen";
+        forgot.style.display = "none";
+
+        // Redirect to login.html instead of home.html
+        setTimeout(() => {
+          window.location.href = "login.html"; // Redirect to login page after login
+        }, 1500);
+      } else {
+        msg.textContent = "❌ Incorrect email or password!";
+        msg.style.color = "red";
+        forgot.style.display = "block"; // Show forgot password link
+      }
+    });
+  </script>
+</body>
+</html>
